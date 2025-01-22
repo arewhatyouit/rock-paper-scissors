@@ -47,7 +47,7 @@ let humanChoice = getHumanChoice();
 
 // Function to reset game if choices are the same.
 
-function resetGame() {
+function resetGame(humanChoice, computerChoice) {
   let resetPrompt = prompt(`You both chose ${humanChoice}, choose again. `, "");
   return {
     humanChoice: resetPrompt,
@@ -62,7 +62,7 @@ function playRound(humanChoice, computerChoice) {
   let scoreBoolean = null;
 
   if (humanChoice === computerChoice) {
-    let roundResult = resetGame();
+    let roundResult = resetGame(humanChoice, computerChoice);
     humanChoice = roundResult.humanChoice;
     computerChoice = roundResult.computerChoice;
   } else if (humanChoice === "rock" && computerChoice === "paper") {
@@ -94,7 +94,7 @@ function playRound(humanChoice, computerChoice) {
 //Create a function to add +1 to whomever wins the round
 
 function score() {
-  let result = playRound();
+  let result = playRound(humanChoice, computerChoice);
   if (result.scoreBoolean === true) {
     humanScore++;
   } else {
@@ -124,7 +124,10 @@ function playAgain() {
   if (resetPrompt === "y") {
     let humanChoice = getHumanChoice();
     let computerChoice = getComputerChoice();
-    playRound(humanChoice, computerChoice);
+    console.log(`New choices:`, { humanChoice, computerChoice });
+    let result = playRound(humanChoice, computerChoice);
+    return result;
+    console.log("Round result:", result);
   } else {
     process.exit();
   }
