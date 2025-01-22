@@ -53,7 +53,7 @@ function resetGame(humanChoice, computerChoice) {
     humanChoice: resetPrompt,
     computerChoice: getComputerChoice()
   };
-}
+  };
 
 // Creat a function comparing the Human and Computers choice. If the Human wins, return "You win!" else return "You lose!"
 
@@ -62,9 +62,8 @@ function playRound(humanChoice, computerChoice) {
   let scoreBoolean = null;
 
   if (humanChoice === computerChoice) {
-    let roundResult = resetGame(humanChoice, computerChoice);
-    humanChoice = roundResult.humanChoice;
-    computerChoice = roundResult.computerChoice;
+    let reset = resetGame(humanChoice, computerChoice);
+    return playRound(reset.humanChoice, reset.computerChoice);
   } else if (humanChoice === "rock" && computerChoice === "paper") {
     outcome = `Computer chose ${computerChoice}, ${computerChoice} beats ${humanChoice}. You lose.`;
     scoreBoolean = false;
@@ -85,9 +84,13 @@ function playRound(humanChoice, computerChoice) {
     scoreBoolean = true;
   }
 
+  let scoreResult = score();
+
   return {
     outcome: outcome,
     scoreBoolean: scoreBoolean
+    humanScore: scoreResult.humanScore,
+    computerScore: scoreResult.computerScore
   };
 }
 
@@ -124,13 +127,11 @@ function playAgain() {
   if (resetPrompt === "y") {
     let humanChoice = getHumanChoice();
     let computerChoice = getComputerChoice();
-    console.log(`New choices:`, { humanChoice, computerChoice });
     let result = playRound(humanChoice, computerChoice);
-    return result;
-    console.log("Round result:", result);
+    console.log(result.outcome); 
+    console.log(displayScore(result));
+    playAgain();
   } else {
     process.exit();
   }
 }
-
-console.log(playAgain());
