@@ -16,12 +16,11 @@ function getComputerChoice() {
   } else {
     computerChoice = "scissors";
   }
+  console.log("Lets play rock, paper scissors!");
+  console.log(`First computerChoice: ` + computerChoice);
   return computerChoice;
 }
 
-let computerChoice = getComputerChoice();
-
-console.log("Lets play rock, paper scissors!");
 
 // Create a function called getHumanChoice which uses prompt input to get the users choice or Rock Paper of Scissors
 
@@ -43,28 +42,33 @@ function getHumanChoice() {
   }
 }
 
-let humanChoice = getHumanChoice();
+//Function to start game
 
-// Function to reset game if choices are the same.
+function startGame() {
+  let firstComputerChoice = getComputerChoice();
+  let firstHumanChoice = getHumanChoice();
+  playRound(firstHumanChoice, firstComputerChoice);
+}
 
-function resetGame(humanChoice, computerChoice) {
-  let resetPrompt = prompt(`You both chose ${humanChoice}, choose again. `, "");
-  return {
-    humanChoice: resetPrompt,
-    computerChoice: getComputerChoice()
-  };
-  };
+startGame();
 
-// Creat a function comparing the Human and Computers choice. If the Human wins, return "You win!" else return "You lose!"
+// Creatw a function comparing the Human and Computers choice. If the Human wins, return "You win!" else return "You lose!"
 
 function playRound(humanChoice, computerChoice) {
+
   let outcome = "";
   let scoreBoolean = null;
 
+  console.log(`playRound HumanChoice: ` + humanChoice);
+  console.log(`playRound ComputerChoice: ` + computerChoice);
+
   if (humanChoice === computerChoice) {
     let reset = resetGame(humanChoice, computerChoice);
-    return playRound(reset.humanChoice, reset.computerChoice);
-  } else if (humanChoice === "rock" && computerChoice === "paper") {
+    humanChoice = reset.humanChoice;
+    computerChoice = reset.computerChoice;
+  }
+  
+  else if (humanChoice === "rock" && computerChoice === "paper") {
     outcome = `Computer chose ${computerChoice}, ${computerChoice} beats ${humanChoice}. You lose.`;
     scoreBoolean = false;
   } else if (humanChoice === "paper" && computerChoice === "rock") {
@@ -84,19 +88,31 @@ function playRound(humanChoice, computerChoice) {
     scoreBoolean = true;
   }
 
-  let scoreResult = score();
+  let scoreResult = score(humanChoice, computerChoice);
 
   return {
     outcome: outcome,
-    scoreBoolean: scoreBoolean
+    scoreBoolean: scoreBoolean,
     humanScore: scoreResult.humanScore,
     computerScore: scoreResult.computerScore
   };
 }
 
+// Function to reset game if choices are the same.
+
+function resetGame(humanChoice, computerChoice) {
+  let resetPrompt = prompt(`You both chose ${humanChoice}, choose again. `, "");
+  console.log(`resetGame HumanChoice: ` + humanChoice);
+  console.log(`resetGame ComputerChoice: ` + computerChoice);
+  return {
+    humanChoice: resetPrompt,
+    computerChoice: getComputerChoice()
+  };
+}
+
 //Create a function to add +1 to whomever wins the round
 
-function score() {
+function score(humanChoice, computerChoice) {
   let result = playRound(humanChoice, computerChoice);
   if (result.scoreBoolean === true) {
     humanScore++;
@@ -112,13 +128,13 @@ function score() {
 
 //Function to display the score
 
-function displayScore() {
-  let scoreResult = score();
+function displayScore(scoreResult) {
+  scoreResult = score();
   let scoreString = `Human: ${scoreResult.humanScore}, Computer: ${scoreResult.computerScore}`;
   return scoreString;
 }
 
-console.log(displayScore());
+// console.log(scoreString);
 
 //Function to reset the game
 
@@ -128,9 +144,9 @@ function playAgain() {
     let humanChoice = getHumanChoice();
     let computerChoice = getComputerChoice();
     let result = playRound(humanChoice, computerChoice);
-    console.log(result.outcome); 
+    console.log(result);
+    console.log(result.outcome);
     console.log(displayScore(result));
-    playAgain();
   } else {
     process.exit();
   }
