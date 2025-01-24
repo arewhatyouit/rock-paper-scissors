@@ -1,10 +1,12 @@
 // Rock Paper Scissors
 
 const prompt = require("prompt-sync")({ sigint: true });
+
 let humanScore = 0;
 let computerScore = 0;
 
 // Randomly generate a prime number between 1-3 then Create a function called getComputerChoice which returns Rock, Paper or Scissors based on the number generated
+//TODO add functionality to getComputerChoice so it doesn't log out "Lets play rock, paper scissors!" when resetting the game
 
 function getComputerChoice() {
   let computerChoice = "";
@@ -17,24 +19,9 @@ function getComputerChoice() {
     computerChoice = "scissors";
   }
   console.log("Lets play rock, paper scissors!");
-  console.log(`First computerChoice: ` + computerChoice);
+  // console.log(`First computerChoice: ` + computerChoice);
   return computerChoice;
 }
-
-function getComputerChoiceReset() {
-  let computerChoice = "";
-  let randomNum = Math.floor(Math.random() * 3) + 1;
-  if (randomNum === 1) {
-    computerChoice = "rock";
-  } else if (randomNum === 2) {
-    computerChoice = "paper";
-  } else {
-    computerChoice = "scissors";
-  }
-  console.log(`Reset computerChoice: ` + computerChoice);
-  return computerChoice;
-}
-
 
 // Create a function called getHumanChoice which uses prompt input to get the users choice or Rock Paper of Scissors
 
@@ -62,9 +49,10 @@ function startGame() {
   let firstComputerChoice = getComputerChoice();
   let firstHumanChoice = getHumanChoice();
   let result = playRound(firstHumanChoice, firstComputerChoice);
-  console.log(result);
-  console.log(result.outcome);
-  console.log(displayScore(result));
+  console.log(result.outcome); // Show who won
+  let currentScore = score(result); // Update the score
+  console.log(displayScore(currentScore)); // Show the score
+  playAgain();
 }
 
 startGame();
@@ -72,20 +60,16 @@ startGame();
 // Creatw a function comparing the Human and Computers choice. If the Human wins, return "You win!" else return "You lose!"
 
 function playRound(humanChoice, computerChoice) {
-
   let outcome = "";
   let scoreBoolean = null;
 
-  console.log(`playRound HumanChoice: ` + humanChoice);
-  console.log(`playRound ComputerChoice: ` + computerChoice);
+  // console.log(`playRound HumanChoice: ` + humanChoice);
+  // console.log(`playRound ComputerChoice: ` + computerChoice);
 
   if (humanChoice === computerChoice) {
     let reset = resetGame(humanChoice, computerChoice);
-    humanChoice = reset.humanChoice;
-    computerChoice = reset.computerChoice;
-  }
-  
-  else if (humanChoice === "rock" && computerChoice === "paper") {
+    return playRound(reset.humanChoice, reset.computerChoice);
+  } else if (humanChoice === "rock" && computerChoice === "paper") {
     outcome = `Computer chose ${computerChoice}, ${computerChoice} beats ${humanChoice}. You lose.`;
     scoreBoolean = false;
   } else if (humanChoice === "paper" && computerChoice === "rock") {
@@ -105,10 +89,6 @@ function playRound(humanChoice, computerChoice) {
     scoreBoolean = true;
   }
 
-  score(humanChoice, computerChoice);
-  displayScore();
-  playAgain();
-
   return {
     outcome: outcome,
     scoreBoolean: scoreBoolean,
@@ -118,67 +98,77 @@ function playRound(humanChoice, computerChoice) {
 // Function to reset game if choices are the same.
 
 function resetGame(humanChoice, computerChoice) {
-  let resetPrompt = prompt(`You both chose ${humanChoice}, choose again. `, "");
-  console.log(`resetGame HumanChoice: ` + humanChoice);
-  resetComputerChoice = getComputerChoiceReset();
-  console.log(`resetGame ComputerChoice: ` + resetComputerChoice);
-  return {
-    humanChoice: resetPrompt,
-    computerChoice: resetComputerChoice
-  };
+  let resetPrompt = prompt(
+    `You both chose ${humanChoice}, choose again. `,
+    ""
+  ).toLocaleLowerCase();
+  humanChoice = resetPrompt;
+
+  if (
+    resetPrompt === "rock" ||
+    resetPrompt === "paper" ||
+    resetPrompt === "scissors"
+  ) {
+    humanChoice = resetPrompt;
+    let randomNum = Math.floor(Math.random() * 3) + 1;
+
+    if (randomNum === 1) {
+      computerChoice = "rock";
+    } else if (randomNum === 2) {
+      computerChoice = "paper";
+    } else {
+      computerChoice = "scissors";
+    }
+
+    return {
+      humanChoice: humanChoice,
+      computerChoice: computerChoice,
+    };
+  } else {
+    console.log("Invalid choice. Please enter rock, paper, or scissors.");
+    return resetGame(humanChoice, computerChoice);
+  }
 }
 
-function score(humanChoice, computerChoice) {
-  if (humanChoice === computerChoice) {
-    return {
-      humanScore: humanScore,
-      computerScore: computerScore
-    };
-  }
-  
-  // Update scores based on the choices directly
-  if (
-    (humanChoice === "rock" && computerChoice === "scissors") ||
-    (humanChoice === "paper" && computerChoice === "rock") ||
-    (humanChoice === "scissors" && computerChoice === "paper")
-  ) {
+//Create a function to add +1 to whomever wins the round
+
+function score(result) {
+  if (result.scoreBoolean === true) {
     humanScore++;
   } else {
     computerScore++;
   }
-
   return {
     humanScore: humanScore,
-    computerScore: computerScore
+    computerScore: computerScore,
   };
 }
 
 //Function to display the score
 
-function displayScore(result) {
-  let scoreResult = score();
+function displayScore(scoreResult) {
   let scoreString = `Human: ${scoreResult.humanScore}, Computer: ${scoreResult.computerScore}`;
-  return {
-    scoreString: scoreString,
-    result: result.outcome
-  }
+  return scoreString;
 }
 
 // console.log(scoreString);
 
 //Function to reset the game
-//TODO: Add logic to handle inputting anything other than y/n
 
 function playAgain() {
   let resetPrompt = prompt("Play again? y/n ", "");
   if (resetPrompt === "y") {
     let humanChoice = getHumanChoice();
-    let computerChoice = getComputerChoice();
+    let computerChoice = getComputerChoice(); // Using existing function
     let result = playRound(humanChoice, computerChoice);
-    console.log(result);
+    let currentScore = score(result);
     console.log(result.outcome);
-    console.log(displayScore(result));
-  } else {
+    console.log(displayScore(currentScore));
+    playAgain();
+  } else if (resetPrompt === "n") {
     process.exit();
+  } else {
+    console.log("Invalid input. Please enter 'y' or 'n'");
+    playAgain();
   }
 }
