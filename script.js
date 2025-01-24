@@ -1,13 +1,11 @@
-// Rock Paper Scissors
+// Rock Paper Scissors Game
 
 const prompt = require("prompt-sync")({ sigint: true });
 
 let humanScore = 0;
 let computerScore = 0;
 
-// Randomly generate a prime number between 1-3 then Create a function called getComputerChoice which returns Rock, Paper or Scissors based on the number generated
-//TODO add functionality to getComputerChoice so it doesn't log out "Lets play rock, paper scissors!" when resetting the game
-
+//Function to randomly generate a prime number between 1-3 then Create a function called getComputerChoice which returns Rock, Paper or Scissors based on the number generated
 function getComputerChoice() {
   let computerChoice = "";
   let randomNum = Math.floor(Math.random() * 3) + 1;
@@ -19,11 +17,10 @@ function getComputerChoice() {
     computerChoice = "scissors";
   }
   console.log("Lets play rock, paper scissors!");
-  // console.log(`First computerChoice: ` + computerChoice);
   return computerChoice;
 }
 
-// Create a function called getHumanChoice which uses prompt input to get the users choice or Rock Paper of Scissors
+//Function called getHumanChoice which uses prompt input to get the users choice or Rock Paper of Scissors
 
 function getHumanChoice() {
   let humanChoice = prompt(
@@ -38,7 +35,7 @@ function getHumanChoice() {
     console.log(`You chose ${humanChoice}!`);
     return humanChoice;
   } else {
-    console.log("Invalid choice, try again.");
+    console.log("Invalid choice. Please enter rock, paper, or scissors.");
     return getHumanChoice();
   }
 }
@@ -57,14 +54,11 @@ function startGame() {
 
 startGame();
 
-// Creatw a function comparing the Human and Computers choice. If the Human wins, return "You win!" else return "You lose!"
+// Function comparing the Human and Computers choice. If the Human wins, return "You win!" else return "You lose!"
 
 function playRound(humanChoice, computerChoice) {
   let outcome = "";
   let scoreBoolean = null;
-
-  // console.log(`playRound HumanChoice: ` + humanChoice);
-  // console.log(`playRound ComputerChoice: ` + computerChoice);
 
   if (humanChoice === computerChoice) {
     let reset = resetGame(humanChoice, computerChoice);
@@ -151,8 +145,6 @@ function displayScore(scoreResult) {
   return scoreString;
 }
 
-// console.log(scoreString);
-
 //Function to reset the game
 
 function playAgain() {
@@ -168,7 +160,7 @@ function playAgain() {
   } else if (resetPrompt === "n") {
     process.exit();
   } else {
-    console.log("Invalid input. Please enter 'y' or 'n'");
+    console.log("Invalid choice. Please enter 'y' or 'n'");
     playAgain();
   }
 }
