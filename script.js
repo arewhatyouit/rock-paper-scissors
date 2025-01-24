@@ -21,6 +21,20 @@ function getComputerChoice() {
   return computerChoice;
 }
 
+function getComputerChoiceReset() {
+  let computerChoice = "";
+  let randomNum = Math.floor(Math.random() * 3) + 1;
+  if (randomNum === 1) {
+    computerChoice = "rock";
+  } else if (randomNum === 2) {
+    computerChoice = "paper";
+  } else {
+    computerChoice = "scissors";
+  }
+  console.log(`Reset computerChoice: ` + computerChoice);
+  return computerChoice;
+}
+
 
 // Create a function called getHumanChoice which uses prompt input to get the users choice or Rock Paper of Scissors
 
@@ -47,7 +61,10 @@ function getHumanChoice() {
 function startGame() {
   let firstComputerChoice = getComputerChoice();
   let firstHumanChoice = getHumanChoice();
-  playRound(firstHumanChoice, firstComputerChoice);
+  let result = playRound(firstHumanChoice, firstComputerChoice);
+  console.log(result);
+  console.log(result.outcome);
+  console.log(displayScore(result));
 }
 
 startGame();
@@ -88,13 +105,13 @@ function playRound(humanChoice, computerChoice) {
     scoreBoolean = true;
   }
 
-  let scoreResult = score(humanChoice, computerChoice);
+  score(humanChoice, computerChoice);
+  displayScore();
+  playAgain();
 
   return {
     outcome: outcome,
     scoreBoolean: scoreBoolean,
-    humanScore: scoreResult.humanScore,
-    computerScore: scoreResult.computerScore
   };
 }
 
@@ -103,18 +120,28 @@ function playRound(humanChoice, computerChoice) {
 function resetGame(humanChoice, computerChoice) {
   let resetPrompt = prompt(`You both chose ${humanChoice}, choose again. `, "");
   console.log(`resetGame HumanChoice: ` + humanChoice);
-  console.log(`resetGame ComputerChoice: ` + computerChoice);
+  resetComputerChoice = getComputerChoiceReset();
+  console.log(`resetGame ComputerChoice: ` + resetComputerChoice);
   return {
     humanChoice: resetPrompt,
-    computerChoice: getComputerChoice()
+    computerChoice: resetComputerChoice
   };
 }
 
-//Create a function to add +1 to whomever wins the round
-
 function score(humanChoice, computerChoice) {
-  let result = playRound(humanChoice, computerChoice);
-  if (result.scoreBoolean === true) {
+  if (humanChoice === computerChoice) {
+    return {
+      humanScore: humanScore,
+      computerScore: computerScore
+    };
+  }
+  
+  // Update scores based on the choices directly
+  if (
+    (humanChoice === "rock" && computerChoice === "scissors") ||
+    (humanChoice === "paper" && computerChoice === "rock") ||
+    (humanChoice === "scissors" && computerChoice === "paper")
+  ) {
     humanScore++;
   } else {
     computerScore++;
@@ -128,15 +155,19 @@ function score(humanChoice, computerChoice) {
 
 //Function to display the score
 
-function displayScore(scoreResult) {
-  scoreResult = score();
+function displayScore(result) {
+  let scoreResult = score();
   let scoreString = `Human: ${scoreResult.humanScore}, Computer: ${scoreResult.computerScore}`;
-  return scoreString;
+  return {
+    scoreString: scoreString,
+    result: result.outcome
+  }
 }
 
 // console.log(scoreString);
 
 //Function to reset the game
+//TODO: Add logic to handle inputting anything other than y/n
 
 function playAgain() {
   let resetPrompt = prompt("Play again? y/n ", "");
