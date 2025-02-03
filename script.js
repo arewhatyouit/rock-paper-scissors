@@ -4,6 +4,8 @@ const prompt = require("prompt-sync")({ sigint: true });
 
 let humanScore = 0;
 let computerScore = 0;
+let roundPlayed = 0;
+const TOTALROUNDS = 5;
 
 //Function to randomly generate a prime number between 1-3 then Create a function called getComputerChoice which returns Rock, Paper or Scissors based on the number generated
 function getComputerChoice() {
@@ -16,7 +18,7 @@ function getComputerChoice() {
   } else {
     computerChoice = "scissors";
   }
-  console.log("Lets play rock, paper scissors!");
+  // console.log("Lets play rock, paper scissors!");
   return computerChoice;
 }
 
@@ -42,17 +44,29 @@ function getHumanChoice() {
 
 //Function to start game
 
-function startGame() {
-  let firstComputerChoice = getComputerChoice();
-  let firstHumanChoice = getHumanChoice();
-  let result = playRound(firstHumanChoice, firstComputerChoice);
-  console.log(result.outcome); // Show who won
-  let currentScore = score(result); // Update the score
-  console.log(displayScore(currentScore)); // Show the score
-  playAgain();
+function playGame() {
+  for (let i = 0; i < 5; i++) {
+    console.log(`Debug Rounds played = ${roundPlayed}`)
+    console.log(`Round ${i + 1} of ${TOTALROUNDS}`);
+    let firstComputerChoice = getComputerChoice();
+    let firstHumanChoice = getHumanChoice();
+    let result = playRound(firstHumanChoice, firstComputerChoice);
+    console.log(result.outcome); // Show who won
+    let currentScore = score(result); // Update the score
+    console.log(displayScore(currentScore)); // Show the score
+    console.log("")
+    roundPlayed++;
+}
+  if (roundPlayed === TOTALROUNDS) {
+    console.log(`Game over! The final scores are... Human: ${humanScore}, Computer: ${computerScore}`);
+    console.log("")
 }
 
-startGame();
+   playAgain();
+}
+
+playGame();
+
 
 // Function comparing the Human and Computers choice. If the Human wins, return "You win!" else return "You lose!"
 
@@ -150,13 +164,10 @@ function displayScore(scoreResult) {
 function playAgain() {
   let resetPrompt = prompt("Play again? y/n ", "");
   if (resetPrompt === "y") {
-    let humanChoice = getHumanChoice();
-    let computerChoice = getComputerChoice(); // Using existing function
-    let result = playRound(humanChoice, computerChoice);
-    let currentScore = score(result);
-    console.log(result.outcome);
-    console.log(displayScore(currentScore));
-    playAgain();
+    humanChoice = 0;
+    computerChoice = 0;
+    roundPlayed = 0;
+    playGame();
   } else if (resetPrompt === "n") {
     process.exit();
   } else {
