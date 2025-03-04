@@ -1,0 +1,65 @@
+#main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#btn-div {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+button {
+  box-sizing: content-box;
+  width: 75px;
+  height: 16px;
+  justify-content: center;
+  align-content: center;
+  display: flex;
+  flex-direction: row;
+  background-color: lightseagreen;
+  color: white;
+  padding: 10px 15px;
+  border: 2px solid;
+  border-color: black;
+  border-radius: 4px;
+  margin: 30px 6px 15px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #20b26d;
+}
+
+button:active {
+  background-color: #188755;
+}
+
+#results,
+#announce-div {
+  height: 80px;
+  width: 320px;
+  border: 1px;
+  background-color: rgb(181, 181, 181);
+  border-radius: 8px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+p,
+#announce1 {
+  margin: 0px auto;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  text-align: center;
+}
+
+#winner {
+  margin-top: 15px;
+}
